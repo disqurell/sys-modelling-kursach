@@ -1,7 +1,7 @@
 from collections import deque
 from CommunicationChannel import CommunicationChannel
 from Request import Request
-from ExponentialRandom import rand
+from NormalRandom import rand
 
 import params
 
@@ -34,10 +34,16 @@ class Computer:
 
         if found_data_chance > float(params.SUCCESS_PROBABILITY) or self.id == 2:
             time_to_return_answer = self.get_time_to_return_answer()
+
             processing_time += time_to_return_answer
 
-            request.end_time = current_time + processing_time
+            if self.id == 2:
+                processing_time += self.channel.transmit_request()
+                processing_time -= self.processing_time
+
+            request.end_time += current_time + processing_time
             request.total_time = request.end_time - request.start_time
+
         else:
             processing_time += self.channel.transmit_request()
 

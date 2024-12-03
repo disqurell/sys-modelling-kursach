@@ -14,25 +14,29 @@ class GenerateStatistic:
         pc1_completed = len([req for req in self.completed_requests if req.pk_index == 1])
         pc2_completed = len(self.completed_requests) - pc1_completed
 
-        analysis_result = (
-            f"Максимальная очередь для ПК1: {self.max_queue_sizes[0]}\n"
-            f"Максимальная очередь для ПК2: {self.max_queue_sizes[1]}\n\n"
-            f"Заявки, завершенные ПК1: {pc1_completed}\n"
-            f"Заявки, завершенные ПК2: {pc2_completed}\n"
-        )
+        analysis_result = {
+            "max_len_pc1_queue": self.max_queue_sizes[0],
+            "max_len_pc2_queue": self.max_queue_sizes[1],
+            "pc1_completed": pc1_completed,
+            "pc2_completed": pc2_completed,
+            "completed_requests": self.completed_requests,
+        }
 
-        print(f"Максимальная очередь для ПК1: {self.max_queue_sizes[0]}")
-        print(f"Максимальная очередь для ПК2: {self.max_queue_sizes[1]}\n")
+        # print(f"Максимальная очередь для ПК1: {self.max_queue_sizes[0]}")
+        # print(f"Максимальная очередь для ПК2: {self.max_queue_sizes[1]}\n")
 
-        print(f"Заявки, завершенные ПК1: {pc1_completed}")
-        print(f"Заявки, завершенные ПК2: {pc2_completed}\n")
+        # print(f"Заявки, завершенные ПК1: {pc1_completed}")
+        # print(f"Заявки, завершенные ПК2: {pc2_completed}\n")
         return analysis_result
 
-    def plot_distribution_function(self):
+    @staticmethod
+    def plot_distribution_function(data: dict):
+
+        completed_requests = data.get("completed_requests")
         """
         Строит функцию распределения времени обслуживания заявок.
         """
-        service_times = [req.total_time for req in self.completed_requests]
+        service_times = [req.total_time for req in completed_requests]
         service_times.sort()
 
         # Вычисление частот
@@ -54,5 +58,7 @@ class GenerateStatistic:
         ax.set_ylabel("Накопленная вероятность")
         ax.grid(True)
         ax.legend()
+
+        plt.close()
 
         return fig

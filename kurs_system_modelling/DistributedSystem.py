@@ -3,7 +3,7 @@ from typing import List
 
 import params
 from GenerateStatistic import GenerateStatistic
-from ExponentialRandom import rand
+from NormalRandom import rand
 
 from Request import Request
 from Computer import Computer
